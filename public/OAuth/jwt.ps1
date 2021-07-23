@@ -12,16 +12,16 @@ function Request-JWTAuthorization() {
     )
 
   # Reference dependencies
-  . ([System.IO.Path]::Combine($PSScriptRoot, "..\Install-NugetPackage.ps1"))
+  . ([System.IO.Path]::Combine($PSScriptRoot, "../Install-NugetPackage.ps1"))
 
   # Load required assemblies
   Install-NugetPackage DerConverter '3.0.0.82'
   Install-NugetPackage PemUtils '3.0.0.82'
 
   #New-Item "config\ds_access_token.txt" -Force
-  New-Item "$home\.Docusign\ds_access_token.txt" -Force
+  New-Item "$home/.Docusign/ds_access_token.txt" -Force
 
-  if (!(test-path "$home\.Docusign\private.key")){
+  if (!(test-path "$home/.Docusign/private.key")){
     Write-Error "`n Error: First create an RSA keypair on your integration key and copy the private_key into the file $home\.Docusign\private.key and save it" -ErrorAction Stop
     exit 1
   }

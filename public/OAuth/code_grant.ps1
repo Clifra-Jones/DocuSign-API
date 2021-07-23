@@ -10,7 +10,8 @@ function Request-CodeGrantAuthorization() {
   Param(
     [Parameter(
       Mandatory = $true
-    )]$apiVersion
+    )]
+    [string]$apiVersion
   )
 
   $PORT = '8080'
@@ -18,34 +19,29 @@ function Request-CodeGrantAuthorization() {
 
   #$accessTokenFile = [System.IO.Path]::Combine($PSScriptRoot, "..\config\ds_access_token.txt")
   #$accountIdFile = [System.IO.Path]::Combine($PSScriptRoot, "..\config\API_ACCOUNT_ID")
-  $accessTokenFile = "$home\.Docusign\ds_access_token.txt"
-  $accountIdFile = "$Home\.Docusign\API_ACCOUNT_ID"
-  $refreshTokenFile = "$Home\.Docusign\refresh_token.txt"
+  $accessTokenFile = "$home/.Docusign/ds_access_token.txt"
+  $accountIdFile = "$Home/.Docusign/API_ACCOUNT_ID"
+  $refreshTokenFile = "$Home/.Docusign/refresh_token.txt"
 
   #Get current Config
-  $configFile = "$Home\.DocuSign\settings.json"
-  if (Test-Path $configFile) {
-    $Config = Get-Content -Path $configFile -raw | ConvertFrom-Json
+
+    $Config = Get-Config
     $clientId = $config.INTEGRATION_KEY_AUTH_CODE
     $clientSecret = $config.SECRET_KEY
     #$apiVersion = "eSignature"
-  } else {
-    Throw "Condifuration file not found! Use Set-APIKeys."
-    exit
-  }
 
   $state = [Convert]::ToString($(Get-Random -Maximum 1000000000), 16)
 
-  if($apiVersion -eq "rooms"){
+  if($apiVersion -eq [APIVersions]::rooms){
     $scopes = "signature%20dtr.rooms.read%20dtr.rooms.write%20dtr.documents.read%20dtr.documents.write%20dtr.profile.read%20dtr.profile.write%20dtr.company.read%20dtr.company.write%20room_forms"
   }
-  elseif ($apiVersion -eq "eSignature") {
+  elseif ($apiVersion -eq [APIVersions]::eSignature) {
     $scopes = "signature"
   }
-  elseif ($apiVersion -eq "click") {
+  elseif ($apiVersion -eq [APIVersions]::click) {
     $scopes = "click.manage"
   }
-  elseif ($apiVersion -eq "monitor") {
+  elseif ($apiVersion -eq [APIVersions]::monitor) {
     $scopes = "signature impersonation"
   }
 

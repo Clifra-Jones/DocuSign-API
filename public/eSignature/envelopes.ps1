@@ -12,7 +12,9 @@ function Get-Envelopes() {
     $Uri = "{0}/v2.1/accounts/{1}/envelopes" -f $apiUri, $accountID
     $Headers = Get-Headers
 
-    $body = @{ "from_date" = ${fromDate} }
+    $sFromDate = $fromDate.ToString("yyyy-MM-ddThh:mm:ssK")
+
+    $body = @{ "from_date" = ${sFromDate} }
 
     $response = Invoke-RestMethod -Uri $Uri -Method GET -Headers $Headers -Body $body
 
@@ -37,7 +39,7 @@ function Get-EnvelopeInfo() {
 
     Process {
 
-        $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}" -f $apiUri, $accountId, $envelopId
+        $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}" -f $apiUri, $accountId, $envelopeId
 
         $response = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Headers
 
@@ -46,7 +48,7 @@ function Get-EnvelopeInfo() {
     }
 }
 
-function Get-EnvelopeResipients() {
+function Get-EnvelopeRecipients() {
     [CmdletBinding()]
     Param(
         [Parameter(
@@ -72,7 +74,7 @@ function Get-EnvelopeResipients() {
     }    
 }
 
-function Show-EnvelopeDocuments() {
+function Select-EnvelopeDocuments() {
     [CmdletBinding()]
     Param(
         [Parameter(
@@ -102,45 +104,66 @@ function Get-EnvelopeDocuments() {
     [CmdletBinding()]
     Param(
         [Parameter(
-            Mandatory = $true
+            Mandatory = $true,
+            ValueFromPipeline = $true,
+            ValueFromPipelineByPropertyName = $true
         )]
         [string]$envelopeId,
         [Parameter(
             Mandatory = $true
         )]
         [listDocs]$listDocsView,
-        [Parameter(
-            Mandatory = $true
-        )]
-        [string]$outputFile
+        [string]$outputFile,
+        [string]$outputFolder
     )
-    $accountId = Get-ApiAccountId
-
-    $headers = Get-Headers
-
-    $outputFileExtension = 'pdf'
-
-    $docChoice = "1"
-
-    if ($listDocsView -eq [listDocs]::CertificateOfCompletion) {
-        $docChoice = "certificate"
-    }
-    elseif ($listDocsView -eq [listDocs]::DocumentsCombinedTogether) {
-        $docChoice = "combined"
-    }
-    elseif ($listDocsView -eq [listDocs]::ZIPFile) {
-        $docChoice = "archive"
-        $outputFileExtension = "zip"
-    }
-    else {
-        $docChoice = $listDocsView
-    }
     
-    
-    $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $docChoice
+    Begin {
+        $accountId = Get-ApiAccountId
 
-    Invoke-RestMethod -uri $Uri -Method GET -Headers $headers -OutFile ${$outputFile}${outputFileExtension}
+        $headers = Get-Headers
 
-    Write-Output "The document(s) are stored in file ${outputFile}${outputFileExtension}"
+        $outputFileExtension = 'pdf'
+
+        $docChoice = "1"
+
+        if ($listDocsView -eq [listDocs]::CertificateOfCompletion) {
+            $docChoice = "certificate"
+        }
+        elseif ($listDocsView -eq [listDocs]::DocumentsCombinedTogether) {
+            $docChoice = "combined"
+        }
+        elseif ($listDocsView -eq [listDocs]::ZIPFile) {
+            $docChoice = "archive"
+            $outputFileExtension = "zip"
+        }
+        else {
+            $docChoice = $listDocsView
+        }
+    }
+
+    Process {
+        if ($docChoice -eq [listDocs]::SeperateFiles) {
+            $documents = (Select-EnvelopeDocuments -envelopeId $envelopeId).envelopeDocuments
+            foreach ($document in $documents) {
+                $documentId = $document.documentId
+                $outputFile = $document.Name
+                $outputFilePath = "{0}/{1}.{2}" -f $outputFolder, $outputFile, $outputFileExtension
+                $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $documentId
+                Invoke-RestMethod -Uri $Uri -Method GET -Headers $headers -OutFile $outputFilePath
+                Write-Output "The document is stored in file $outputFilePath."
+            }
+        } else {
+            If (-not ($outputFile)) {
+                Write-Output "Supply value for the following parameter:"
+                $outputFile = Read-Host -Prompt 'outputFile: '
+            }
+            $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $docChoice
+
+            Invoke-RestMethod -uri $Uri -Method GET -Headers $headers -OutFile ${$outputFile}${outputFileExtension}
+
+            Write-Output "The document(s) are stored in file ${outputFile}${outputFileExtension}"
+        
+        }
+    }
 }
 

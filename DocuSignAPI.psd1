@@ -80,8 +80,8 @@ FunctionsToExport = @(`
     'Request-JWTAuthorization', `
     'Get-Envelopes', `
     'Get-EnvelopeInfo', `
-    'Get-EnvelopeResipients', `
-    'Show-EnvelopeDocuments', `
+    'Get-EnvelopeRecipients', `
+    'Select-EnvelopeDocuments', `
     'Get-EnvelopeDocuments'
 )
 

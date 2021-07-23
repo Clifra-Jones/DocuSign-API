@@ -1,18 +1,12 @@
 
-$script:apiUri = "http://demo.docusign.net/restapi"
+$script:apiUri = "https://demo.docusign.net/restapi"
 
 function Get-Headers() {
-    Param (
-        [Parameter(
-            Mandatory = $true
-        )]
-        [string]$apiAccountId
-    )
     
     $accessToken = Get-AccessToken
     $Headers = @{
-        "Authorization" = "Bearer $accessToken";
-        "Content-Type" = "application/json"
+        'Authorization' = "Bearer $accessToken";
+        'Content-Type'  = "application/json";
     }
 
     return $Headers
@@ -30,7 +24,7 @@ function Get-Config() {
 }
 
 function Get-AccessToken() {
-    $tokenPath = "$home\.Docusign\ds_access_token.txt"
+    $tokenPath = "$home/.Docusign/ds_access_token.txt"
     if (-not (Test-Path $tokenPath)) {
         Throw "Access Token file missing. Use the Request-CodeGrantAuthorization or the Request-JWTAuthorization to retrieve an access token."
         exit
@@ -40,11 +34,11 @@ function Get-AccessToken() {
 }
 
 function Get-ApiAccountId() {
-    $accountIdPath = "$home\.Docusign\API_ACCOUNT_ID"
+    $accountIdPath = "$home/.Docusign/API_ACCOUNT_ID"
     if (-not (Test-Path $accountIdPath)) {
         Throw "API Account ID file not found. Use the Request-CodeGrantAuthorization or the Request-JWTAuthorization to retrieve an access token."
         exit
     }
-    $ApiAccountId = Get-Content "$home\.Docusign\API_ACCOUNT_ID"
+    $ApiAccountId = Get-Content "$home/.Docusign/API_ACCOUNT_ID"
     return $ApiAccountId
 }

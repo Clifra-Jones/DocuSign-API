@@ -1,6 +1,6 @@
-function set-APIKeys() {
+function Set-APIKeys() {
     if (-not (Test-Path "$home/.Docusign")) {
-        New-Item -ItemType Directory -Path "$Home\.DocuSign"
+        New-Item -ItemType Directory -Path "$Home\.Docusign"
     }
     
     $configPath = "$HOME/.Docusign/settings.json"
