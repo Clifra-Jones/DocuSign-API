@@ -22,6 +22,7 @@ function Request-CodeGrantAuthorization() {
   $accessTokenFile = "$home/.Docusign/ds_access_token.txt"
   $accountIdFile = "$Home/.Docusign/API_ACCOUNT_ID"
   $refreshTokenFile = "$Home/.Docusign/refresh_token.txt"
+  $expiresDateFile = "$home/.Docusign/expiration_date.txt"
 
   #Get current Config
 
@@ -135,12 +136,18 @@ function Request-CodeGrantAuthorization() {
     }
     $accessToken = $accessTokenResponse.access_token
     $refreshToken = $AccessTokenResponse.refresh_token
+    $expiresInSeconds = $AccessTokenResponse.expires_in
+    $expirationDate = (Get-Date).AddSeconds($expiresInSeconds)
+
     Write-Output "Access token: $accessToken"
     Write-Output $accessToken > $accessTokenFile
     Write-Output "Access token has been written to $accessTokenFile file..."
     Write-Output "Refresh Token: $refreshToken"
     Write-Output $refreshToken > $refreshTokenFile
     Write-Output "Refresh token has been writen to $refreshTokenFile file..."
+    Write-Output "Expires in: $expiresIn"
+    write-output $expirationDate.ToFileTime() > $expiresDateFile
+    Write-Output "Acccess token will expire on $expirationDate."
 
     Write-Output "Getting an account id..."
     $userInfoResponse = Invoke-RestMethod `
@@ -156,3 +163,53 @@ function Request-CodeGrantAuthorization() {
     Write-Error $_
   }
 }
+
+function Request-CodeGrantRefresh() {
+
+  #Get current Config
+  $Config = Get-Config
+  $clientId = $config.INTEGRATION_KEY_AUTH_CODE
+  $clientSecret = $config.SECRET_KEY
+
+  $accessTokenFile = "$home/.Docusign/ds_access_token.txt"
+  $refreshTokenFile = "$home/.Docusign/refresh_token.txt"
+  $expireDateFile = "$home/.Docusign/expiration_date.txt"
+
+  $authorizationEndpoint = "https://account-d.docusign.com/oauth/"
+ 
+  # Preparing an Authorization header which contains your integration key and secret key
+  $authorizationHeader = "${clientId}:${clientSecret}"
+
+  # Convert the Authorization header into base64
+  $authorizationHeaderBytes = [System.Text.Encoding]::UTF8.GetBytes($authorizationHeader)
+  $authorizationHeaderKey = [System.Convert]::ToBase64String($authorizationHeaderBytes)
+
+  $refreshToken = Get-RefreshToken
+
+  $Headers = @{
+    "Authorization" = "Basic $authorizationHeaderKey";
+  }
+
+  $Body = @{
+    "grant_type" = "refresh_token";
+    "refresh_token" = "$refreshToken"
+  }
+
+  $Uri = "$authorizationEndpoint/token"
+  try {
+    $response = Invoke-RestMethod -Uri $Uri -Method POST -Headers $Headers -Body $Body
+    $newAccessToken = $response.access_token
+    $newRefreshToken = $response.refresh_token
+    $expiresInSeconds = $response.expires_in
+    $expirationDate = (Get-Date).AddSeconds($expiresInSeconds).ToLongDateString()
+
+    Write-Output $newAccessToken > $accessTokenFile
+    Write-Output $newRefreshToken > $refreshTokenFile
+    Write-Output $expirationDate.ToFileTime() > $expireDateFile
+  } catch {
+    Write-Error $_
+  }
+
+}
+
+
