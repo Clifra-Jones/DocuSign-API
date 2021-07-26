@@ -63,7 +63,7 @@ To get more detailed information on an envelope use the Get-EnvelopeInfo functio
 To get info on all the envelopes you retrieved previously use:
 >$envelopes | Get-EnvelopeInfo
 
-To get a single envelope you can use either:
+To get info on a single envelope you can use either:
 >$envelope[0] | Get-EnvelopeInfo
 
 or
