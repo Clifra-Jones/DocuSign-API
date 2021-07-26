@@ -24,8 +24,8 @@ You must log into Docusign Developer site go to Apps and Keys and create an appl
 Withing that application create a secret key (copy the secret key before saving or you will not be able to copy later)
 You will need your User GUID, Integration Key and Secret Key
 
-Prior to using any of the other function you must create your settings file by running the Set-APIKey function.
->Set-API
+Prior to using any of the other function you must create your settings file by running the Set-APIKeys function.
+>Set-APIKeys
 
 You will be prompted for you User GUID, Integration Key and the Secret Key. Enter each when prompted, this will create a file called settings.json in a folder called .Docusign in you user profile folder.
 
