@@ -1,7 +1,7 @@
 # Public classes, enums and variables
 
 Enum listDocs {
-    SeperateFiles = 0
+    SeparateFiles = 0
     CertificateOfCompletion = 4;
     DocumentsCombinedTogether = 5;
     ZIPFile = 6;

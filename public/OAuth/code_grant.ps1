@@ -11,7 +11,8 @@ function Request-CodeGrantAuthorization() {
     [Parameter(
       Mandatory = $true
     )]
-    [string]$apiVersion
+    [string]$apiVersion,
+    [switch]$extended
   )
 
   $PORT = '8080'
@@ -23,6 +24,7 @@ function Request-CodeGrantAuthorization() {
   $accountIdFile = "$Home/.Docusign/API_ACCOUNT_ID"
   $refreshTokenFile = "$Home/.Docusign/refresh_token.txt"
   $expiresDateFile = "$home/.Docusign/expiration_date.txt"
+  $userInfoFile = "$home/.Docusign/userinfo.json"
 
   #Get current Config
 
@@ -44,6 +46,10 @@ function Request-CodeGrantAuthorization() {
   }
   elseif ($apiVersion -eq [APIVersions]::monitor) {
     $scopes = "signature impersonation"
+  }
+
+  If ($extended) {
+    "extended%20" + $scopes
   }
 
   $authorizationEndpoint = "https://account-d.docusign.com/oauth/"
@@ -160,6 +166,15 @@ function Request-CodeGrantAuthorization() {
     Write-Output "Account id has been written to $accountIdFile file..."
   }
   catch {
+    Write-Error $_
+  }
+  try {
+    #get user info
+    $headers = Get-Headers
+    $URI = "GET https://account-d.docusign.com/oauth/userinfo"
+    $response = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+    $response | ConvertTo-Json -Depth 100 | Out-File $userInfoFile
+  } catch {
     Write-Error $_
   }
 }

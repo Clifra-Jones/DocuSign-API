@@ -112,7 +112,7 @@ function Get-EnvelopeDocuments() {
         [Parameter(
             Mandatory = $true
         )]
-        [listDocs]$listDocsView,
+        [string]$listDocsView,
         [string]$outputFile,
         [string]$outputFolder
     )
@@ -142,7 +142,7 @@ function Get-EnvelopeDocuments() {
     }
 
     Process {
-        if ($docChoice -eq [listDocs]::SeperateFiles) {
+        if ($docChoice -eq [listDocs]::SeparateFiles) {
             $documents = (Select-EnvelopeDocuments -envelopeId $envelopeId).envelopeDocuments
             foreach ($document in $documents) {
                 $documentId = $document.documentId
@@ -152,6 +152,14 @@ function Get-EnvelopeDocuments() {
                 Invoke-RestMethod -Uri $Uri -Method GET -Headers $headers -OutFile $outputFilePath
                 Write-Output "The document is stored in file $outputFilePath."
             }
+        } elseif ($docChoice -match '\d') {
+            $document = ((Select-EnvelopeDocuments -envelopeId $envelopeId).envelopeDocuments).where({$_.documentId -eq $docChoice})
+            $DocumentId = $document.documentId
+            $outputFile = $document.Name
+            $outputFilePath = "{0}/{1}.{2}" -f $outputFolder, $outputFile, $outputFileExtension
+            $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $documentId
+            Invoke-RestMethod -Uri $Uri -Method GET -Headers $headers -OutFile $outputFilePath
+            Write-Output "The document was stored in file $outputFilePath"
         } else {
             If (-not ($outputFile)) {
                 Write-Output "Supply value for the following parameter:"

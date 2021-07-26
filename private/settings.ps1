@@ -61,3 +61,19 @@ function Get-ApiAccountId() {
     $ApiAccountId = Get-Content "$home/.Docusign/API_ACCOUNT_ID"
     return $ApiAccountId
 }
+
+function Get-UserInfo() {
+    $userInfoPath = "$home/.Docusign/userinfo.json"
+    $userInfo = Get-Content -Path $userInfoPath -Raw |ConvertFrom-Json
+    return $userInfo
+}
+
+function Get-ApiUri() {
+    $AccountId = Get-ApiAccountId
+    $userInfo = Get-UserInfo
+    $accountInfo = $userInfo.accounts.where({$_.account_id -eq $AccountId})
+    $apiUri = "{0}/restapi/v2.1/accounts/{1}" -f $accountInfo.base_uri, $AccountId
+    return $apiUri
+}
+
+#$script:apiUri = Get-ApiUri
