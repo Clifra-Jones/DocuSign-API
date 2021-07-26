@@ -84,7 +84,7 @@ To download documents associated with an envelope use the Get-EnvelopeDocuments 
 Documents can be downloaded as either a single document, all documents as separate files, as a combined PDF or as a ZIP archive.
 You specify this by providing the -listDocsView parameter. This is either an integer value specifying the document ID or one of the [listDocs] enum values.
 To use the Get-EnvelopeDocuments function you either pipe in envelope objects or provide the -envelopeId parametes, the -listViewDocs value, and the optional -outputFile and -OutputFolder parameters.
-NOTE: if you provide -listViewDocs as [listDocs]::SeparateFiles or select a specific Document Id you should not provide the -outputFile parameter as the file name will be determined by the Name field in the Document information. If -outFile is provided it will be ignored.
+NOTE: if you provide -listViewDocs as [listDocs]::SeparateFiles or select a specific Document Id you should not provide the -outputFile parameter as the file name will be determined by the Name field in the Document information. If -outputFile is provided it will be ignored.
 
 Example: 
 Download all documents from an envelope as seperate files:
