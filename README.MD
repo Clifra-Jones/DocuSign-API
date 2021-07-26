@@ -47,7 +47,7 @@ You can request an extended token that will be valid for 30 days by using the -e
 If the token has expired or will expire within the next 2 hours a new authorization token will be requested using the stored refresh token. 
 The user will not be required to log in to receive this new token.
 
-##Envelope functions
+## Envelope functions
 Most of these function are based on envelopes. Envelopes are how Docusign stores and references Documents.
 To retrieve envelopes use the Get-Envelopes function
 >Get-Envelopes -fromDate [datetime]
