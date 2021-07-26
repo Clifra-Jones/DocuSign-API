@@ -33,8 +33,10 @@ You will be prompted for you User GUID, Integration Key and the Secret Key. Ente
 You must have an Authorization code to execute any of the Envelope finctions.
 To get an authorization code execute:
 >Request-CodeGrantAuthorization -APIVersion 'eSignature'
+
 You can also utilize the built in class to retrive the API version.
 >Request-CodeGrantAuthorization -APIVersion ([APIVersions]::eSignature)
+
 (The parenthasis are required.)
 You will  be prompted to log inot the docusign web site.
 This will save your authorization code, a refresh token, your Account ID and the expiration date of the authorization code in the .Docusign folder.
@@ -49,8 +51,10 @@ The user will not be required to log in to receive this new token.
 Most of these function are based on envelopes. Envelopes are how Docusign stores and references Documents.
 To retrieve envelopes use the Get-Envelopes function
 >Get-Envelopes -fromDate [datetime]
+
 The -fromDate should be a date object sime time prior to the current date. To retrieve envelopes for the last 10 dates issue:
 >Get-Envelopes -fromDate (Get-Date).AddDate(-10)
+
 It is a best practice to store envelopes in a variable because you will need them later and avoid unnecessar piping.
 To only retrieve completed envelopes do the following:
 >$envelopes = Get-Envelopes -fromDate (Get-Date).AddDays(-2) | Where-Object {$_.Status -eq ([EnvelopeStatus]::completed)}
@@ -58,12 +62,10 @@ To only retrieve completed envelopes do the following:
 To get more detailed information on an envelope use the Get-EnvelopeInfo function.
 To get info on al lthe envelopes you retrieved previously use:
 >$envelopes | Get-EnvelopeInfo
+
 To get a single envelope you can use either:
 >$envelope[0] | Get-EnvelopeInfo
+
 or
+
 >Get-EnvelopeInfo -envelopeId $envelopes[0].envelopeId
-
-
-
-
-
