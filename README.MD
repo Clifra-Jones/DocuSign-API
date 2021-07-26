@@ -30,7 +30,7 @@ Prior to using any of the other function you must create your settings file by r
 You will be prompted for you User GUID, Integration Key and the Secret Key. Enter each when prompted, this will create a file called settings.json in a folder called .Docusign in you user profile folder.
 
 ## Initial Authorization
-You must have an Authorization code to execute any of the Envelope finctions.
+You must have an Authorization code to execute any of the Envelope functions.
 To get an authorization code execute:
 >Request-CodeGrantAuthorization -APIVersion 'eSignature'
 
