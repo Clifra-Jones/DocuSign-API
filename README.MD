@@ -69,3 +69,32 @@ To get a single envelope you can use either:
 or
 
 >Get-EnvelopeInfo -envelopeId $envelopes[0].envelopeId
+
+To retrieve the Recipients of an Envelope use the Get-EnvelopeRecipients.
+>$envelopes | Get-EnvelopeRecipient
+
+You can also pipe in a single envelope or use the -envelopeId paramter.
+
+To show the documents accociated with the envelopes use the Select-EnvelopeDocuments
+>$envelopes | Select-EnvelopeDocuments
+
+Again you can pipe envelopes or use the -envelopeId parameter
+
+To download documents associated with an envelope use the Get-EnvelopeDocuments.
+Documents can be downloaded as either a single document, all documents as separate files, as a combined PDF or as a ZIP archive.
+You specify this by providing the -listDocsView parameter. This is either an integer value specifying the document ID or one of the [listDocs] enum values.
+To use the Get-EnvelopeDocuments function you either pipe in envelope objects or provide the -envelopeId parametes, the -listViewDocs value, and the optional -outputFile and -OutputFolder parameters.
+NOTE: if you provide -listViewDocs as [listDocs]::SeparateFiles or select a specific Document Id you should not provide the -outputFile parameter as the file name will be determined by the Name field in the Document information. If -outFile is provided it will be ignored.
+
+Example: 
+Download all documents from an envelope as seperate files:
+>$envelope | Get-EnvelopeDocuments -listDocsView ([listDocs]::SeparateFiles) -outputFolder 'c:\DocusignDocuments'
+
+Download all Documents as a ZI file
+>$envelope | Get-EnvelopeDocuments -listDocsView ([listDocs]::ZipFile -outputFolder 'c:\DocusignDocuments' -outputFile 'Documents'
+
+Download a Document with Id 2 from an envelope:
+$envelope | Get-EnvelopeDocuments -listDocsView 2 -outputFolder 'c:\DocusignDocuments'
+
+
+
