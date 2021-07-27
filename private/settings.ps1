@@ -93,5 +93,3 @@ function Get-ApiUri() {
     $apiUri = "{0}/restapi/v2.1/accounts/{1}" -f $accountInfo.base_uri, $AccountId
     return $apiUri
 }
-
-$script:apiUri = Get-ApiUri

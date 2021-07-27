@@ -10,6 +10,8 @@ function Get-Envelopes() {
 
     #$accountId = Get-ApiAccountId
     #$Uri = "{0}/v2.1/accounts/{1}/envelopes" -f $apiUri, $accountID
+    $apiUri = Get-ApiUri
+
     $Uri = "{0}/envelopes" -f $apiUri
     $Headers = Get-Headers
 
@@ -33,6 +35,7 @@ function Get-EnvelopeInfo() {
         [string]$envelopeId
     )
     Begin {
+        $apiUri = Get-ApiUri
 
         $Headers = Get-Headers
     }
@@ -60,6 +63,7 @@ function Get-EnvelopeRecipients() {
     )
 
     Begin {
+        $apiUri = Get-ApiUri
 
         $Headers = Get-Headers
     }
@@ -85,6 +89,7 @@ function Select-EnvelopeDocuments() {
     )
 
     Begin {
+        $apiUri = Get-ApiUri
 
         $Headers = Get-Headers
     }
@@ -116,6 +121,8 @@ function Get-EnvelopeDocuments() {
     )
     
     Begin {
+
+        $apiUri = Get-ApiUri
 
         $headers = Get-Headers
 
