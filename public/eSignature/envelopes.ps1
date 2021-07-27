@@ -8,8 +8,9 @@ function Get-Envelopes() {
         [DateTime]$fromDate
     )
 
-    $accountId = Get-ApiAccountId
-    $Uri = "{0}/v2.1/accounts/{1}/envelopes" -f $apiUri, $accountID
+    #$accountId = Get-ApiAccountId
+    #$Uri = "{0}/v2.1/accounts/{1}/envelopes" -f $apiUri, $accountID
+    $Uri = "{0}/envelopes" -f $apiUri
     $Headers = Get-Headers
 
     $sFromDate = $fromDate.ToString("yyyy-MM-ddThh:mm:ssK")
@@ -32,14 +33,13 @@ function Get-EnvelopeInfo() {
         [string]$envelopeId
     )
     Begin {
-        $accountId = Get-ApiAccountId        
 
         $Headers = Get-Headers
     }
 
     Process {
 
-        $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}" -f $apiUri, $accountId, $envelopeId
+        $Uri = "{0}/envelopes/{1}" -f $apiUri, $envelopeId
 
         $response = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Headers
 
@@ -60,13 +60,12 @@ function Get-EnvelopeRecipients() {
     )
 
     Begin {
-        $accountId = Get-ApiAccountId
 
         $Headers = Get-Headers
     }
 
     Process {
-        $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/recipients" -f $apiUri, $accountId, $envelopeId
+        $Uri = "{0}/envelopes/{1}/recipients" -f $apiUri, $envelopeId
 
         $response = Invoke-RestMethod -Uri $Uri -Method Get -Headers $Headers
 
@@ -86,13 +85,12 @@ function Select-EnvelopeDocuments() {
     )
 
     Begin {
-        $accountId = Get-ApiAccountId
 
         $Headers = Get-Headers
     }
 
     Process {
-        $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents" -f $apiUri, $accountId, $envelopeId
+        $Uri = "{0}/envelopes/{1}/documents" -f $apiUri, $envelopeId
 
         $response = Invoke-RestMethod -Uri $Uri -Method GET -Headers $Headers
     
@@ -118,7 +116,6 @@ function Get-EnvelopeDocuments() {
     )
     
     Begin {
-        $accountId = Get-ApiAccountId
 
         $headers = Get-Headers
 
@@ -148,7 +145,7 @@ function Get-EnvelopeDocuments() {
                 $documentId = $document.documentId
                 $outputFile = $document.Name
                 $outputFilePath = "{0}/{1}.{2}" -f $outputFolder, $outputFile, $outputFileExtension
-                $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $documentId
+                $Uri = "{0}/envelopes/{1}/documents/{2}" -f $apiUri, $envelopeId, $documentId
                 Invoke-RestMethod -Uri $Uri -Method GET -Headers $headers -OutFile $outputFilePath
                 Write-Output "The document is stored in file $outputFilePath."
             }
@@ -157,7 +154,7 @@ function Get-EnvelopeDocuments() {
             $DocumentId = $document.documentId
             $outputFile = $document.Name
             $outputFilePath = "{0}/{1}.{2}" -f $outputFolder, $outputFile, $outputFileExtension
-            $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $documentId
+            $Uri = "{0}/envelopes/{1}/documents/{2}" -f $apiUri, $envelopeId, $documentId
             Invoke-RestMethod -Uri $Uri -Method GET -Headers $headers -OutFile $outputFilePath
             Write-Output "The document was stored in file $outputFilePath"
         } else {
@@ -165,7 +162,7 @@ function Get-EnvelopeDocuments() {
                 Write-Output "Supply value for the following parameter:"
                 $outputFile = Read-Host -Prompt 'outputFile: '
             }
-            $Uri = "{0}/v2.1/accounts/{1}/envelopes/{2}/documents/{3}" -f $apiUri, $accountId, $envelopeId, $docChoice
+            $Uri = "{0}/envelopes/{1}/documents/{2}" -f $apiUri, $envelopeId, $docChoice
 
             Invoke-RestMethod -uri $Uri -Method GET -Headers $headers -OutFile ${$outputFile}${outputFileExtension}
 
@@ -174,4 +171,3 @@ function Get-EnvelopeDocuments() {
         }
     }
 }
-

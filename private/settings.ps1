@@ -1,5 +1,5 @@
 
-$script:apiUri = "https://demo.docusign.net/restapi"
+#$script:apiUri = "https://demo.docusign.net/restapi"
 
 function Get-Headers() {
   
@@ -62,8 +62,26 @@ function Get-ApiAccountId() {
     return $ApiAccountId
 }
 
+function Request-UserInfo() {
+    try {
+        #get user info
+        $userInfoFile = "$home/.Docusign/userinfo.json"
+        $headers = Get-Headers
+        $URI = "https://account-d.docusign.com/oauth/userinfo"
+        $response = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+        $response | ConvertTo-Json -Depth 100 | Out-File $userInfoFile
+      } catch {
+        Write-Error $_
+      }
+}
+
 function Get-UserInfo() {
     $userInfoPath = "$home/.Docusign/userinfo.json"
+    $userInfoFile = Get-Item $userInfoPath
+    $userInfoFileDate = $userInfoFile.LastWriteTime
+    if (((Get-Date) - $userInfoFileDate).Days -gt 30) {
+        Request-UserInfo
+    }
     $userInfo = Get-Content -Path $userInfoPath -Raw |ConvertFrom-Json
     return $userInfo
 }
@@ -76,4 +94,4 @@ function Get-ApiUri() {
     return $apiUri
 }
 
-#$script:apiUri = Get-ApiUri
+$script:apiUri = Get-ApiUri

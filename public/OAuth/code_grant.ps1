@@ -24,7 +24,7 @@ function Request-CodeGrantAuthorization() {
   $accountIdFile = "$Home/.Docusign/API_ACCOUNT_ID"
   $refreshTokenFile = "$Home/.Docusign/refresh_token.txt"
   $expiresDateFile = "$home/.Docusign/expiration_date.txt"
-  $userInfoFile = "$home/.Docusign/userinfo.json"
+  #$userInfoFile = "$home/.Docusign/userinfo.json"
 
   #Get current Config
 
@@ -168,16 +168,18 @@ function Request-CodeGrantAuthorization() {
   catch {
     Write-Error $_
   }
-  try {
+  Request-UserInfo
+<#   try {
     #get user info
     $headers = Get-Headers
-    $URI = "GET https://account-d.docusign.com/oauth/userinfo"
+    $URI = "https://account-d.docusign.com/oauth/userinfo"
     $response = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
     $response | ConvertTo-Json -Depth 100 | Out-File $userInfoFile
   } catch {
-    Write-Error $_
-  }
+    Write-Error $_ 
+  } #>
 }
+
 
 function Request-CodeGrantRefresh() {
 
