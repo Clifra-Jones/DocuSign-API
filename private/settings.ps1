@@ -2,11 +2,18 @@
 #$script:apiUri = "https://demo.docusign.net/restapi"
 
 function Get-Headers() {
-  
+    Param(
+        [string]$contentType
+    )
+
     $accessToken = Get-AccessToken
     $Headers = @{
-        'Authorization' = "Bearer $accessToken";
-        'Content-Type'  = "application/json";
+        'Authorization' = "Bearer $accessToken"
+    }
+    if ($contentType) {
+        $Headers.Add("Content-Type", $contentType)
+    } else {
+        $Headers.Add("Content-Type", "application/json")
     }
 
     return $Headers

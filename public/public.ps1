@@ -25,3 +25,20 @@ Class EnvelopeStatus {
     static $timedout = "timedout"
     static $voided = "voided"
 }
+
+$contentTypes = @{
+ "bmp"  = "image/bmp"
+ "csv"  = "text/csv"
+ "doc"  = "application/msword"
+ "docx" = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+ "htm"  = "text/html"
+ "html" = "text/html"
+ "json" = "text/json"
+ "png"  = "image/png"
+ "php"  = "application/x-httpd-php"
+ "ppt"  = "application/vnd.ms-powerpoint"
+ "pptx" = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+ "vsd"  = "application/vnd.visio"
+ "xls"  = "application/vnd.ms-excel"
+ "xlsx" = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+}
