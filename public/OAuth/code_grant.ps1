@@ -216,7 +216,7 @@ function Request-CodeGrantRefresh() {
     $newAccessToken = $response.access_token
     $newRefreshToken = $response.refresh_token
     $expiresInSeconds = $response.expires_in
-    $expirationDate = (Get-Date).AddSeconds($expiresInSeconds).ToLongDateString()
+    $expirationDate = (Get-Date).AddSeconds($expiresInSeconds)
 
     Write-Output $newAccessToken > $accessTokenFile
     Write-Output $newRefreshToken > $refreshTokenFile
