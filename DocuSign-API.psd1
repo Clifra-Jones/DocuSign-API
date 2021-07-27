@@ -59,7 +59,7 @@ PowerShellVersion = '6.0'
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
 ScriptsToProcess = @(`
     './public/public.ps1', `
-    './private/setting.ps1')
+    './private/settings.ps1')
 
 # Type files (.ps1xml) to be loaded when importing this module
 # TypesToProcess = @()
