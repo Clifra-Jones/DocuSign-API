@@ -170,11 +170,11 @@ function Get-EnvelopeDocuments() {
                 $outputFile = Read-Host -Prompt 'outputFile: '
             }
             $Uri = "{0}/envelopes/{1}/documents/{2}" -f $apiUri, $envelopeId, $docChoice
+            $outputFilePath = "{0}/{1}.{2}" -f  $outputFolder, $outputFile , $outputFileExtension
 
-            Invoke-RestMethod -uri $Uri -Method GET -Headers $headers -OutFile ${$outputFile}${outputFileExtension}
-
-            Write-Output "The document(s) are stored in file ${outputFile}${outputFileExtension}"
-        
+            Invoke-RestMethod -uri $Uri -Method GET -Headers $headers -OutFile $outputFilePath
+           
+        Write-Output "The document(s) are stored in file $outputFilePath"
         }
     }
 }
