@@ -5,11 +5,11 @@ function Get-Envelopes() {
         [Parameter(
             Mandatory = $true
         )]
-        [DateTime]$fromDate
+        [int]$pastDays
     )
 
-    #$accountId = Get-ApiAccountId
-    #$Uri = "{0}/v2.1/accounts/{1}/envelopes" -f $apiUri, $accountID
+    $fromDate = (Get-Date).AddDays($pastDays * -1)
+
     $apiUri = Get-ApiUri
 
     $Uri = "{0}/envelopes" -f $apiUri
