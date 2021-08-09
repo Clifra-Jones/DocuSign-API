@@ -67,7 +67,7 @@ function Request-UserInfo() {
         #get user info
         $userInfoFile = "$home/.Docusign/userinfo.json"
         $headers = Get-Headers
-        $URI = "https://account-d.docusign.com/oauth/userinfo"
+        $URI = "https://account.docusign.com/oauth/userinfo"
         $response = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
         $response | ConvertTo-Json -Depth 100 | Out-File $userInfoFile
       } catch {
