@@ -52,7 +52,7 @@ function Request-CodeGrantAuthorization() {
     "extended%20" + $scopes
   }
 
-  $authorizationEndpoint = "https://account-d.docusign.com/oauth/"
+  $authorizationEndpoint = "https://account.docusign.com/oauth/"
   $redirectUri = "http://${IP}:${PORT}/authorization-code/callback"
   $redirectUriEscaped = [Uri]::EscapeDataString($redirectURI)
   $authorizationURL = "${authorizationEndpoint}auth?response_type=code&scope=$scopes&client_id=$clientId&state=$state&redirect_uri=$redirectUriEscaped"
@@ -192,7 +192,7 @@ function Request-CodeGrantRefresh() {
   $refreshTokenFile = "$home/.Docusign/refresh_token.txt"
   $expireDateFile = "$home/.Docusign/expiration_date.txt"
 
-  $authorizationEndpoint = "https://account-d.docusign.com/oauth/"
+  $authorizationEndpoint = "https://account.docusign.com/oauth/"
  
   # Preparing an Authorization header which contains your integration key and secret key
   $authorizationHeader = "${clientId}:${clientSecret}"

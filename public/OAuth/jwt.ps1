@@ -62,7 +62,7 @@ function Request-JWTAuthorization() {
   $PORT = '8080'
   $IP = 'localhost'
   $state = [Convert]::ToString($(Get-Random -Maximum 1000000000), 16)
-  $authorizationEndpoint = "https://account-d.docusign.com/oauth/"
+  $authorizationEndpoint = "https://account.docusign.com/oauth/"
   $redirectUri = "http://${IP}:${PORT}/authorization-code/callback"
   $redirectUriEscaped = [Uri]::EscapeDataString($redirectURI)
   $authorizationURL = "${authorizationEndpoint}auth?scope=$scopes&redirect_uri=$redirectUriEscaped&client_id=$clientId&state=$state&response_type=code"
